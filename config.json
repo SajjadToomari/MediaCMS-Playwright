@@ -1,0 +1,17 @@
+{
+  "headless": false,
+
+  "cms_admin_user": "admin",
+  "cms_admin_password": "S2tqmLiKcJQG6fom",
+
+  "cms_login_url": "http://mediacms.emadhelmi.ir/accounts/login",
+  "cms_upload_url": "http://mediacms.emadhelmi.ir/upload",
+
+  "login_input_username_selector": "input#id_login",
+  "login_input_password_selector": "input#id_password",
+  "login_button_selector": "button.primaryAction",
+
+  "upload_button_selector": "input[type='file']",
+
+  "upload_videos_directory": "C:\\ffmpeg-master-latest-win64-gpl\\bin"
+}
