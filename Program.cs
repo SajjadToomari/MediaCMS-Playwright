@@ -19,7 +19,7 @@ using var playwright = await Playwright.CreateAsync();
 Log.Information("Playwright initilized");
 
 //Launch chromium browser and save user data (cookies, etc)
-await using var browser = await playwright.Chromium.LaunchPersistentContextAsync("data", new BrowserTypeLaunchPersistentContextOptions
+await using var browser = await playwright.Chromium.LaunchPersistentContextAsync("data1", new BrowserTypeLaunchPersistentContextOptions
 {
     Headless = settings.Headless,
 });
@@ -79,8 +79,6 @@ async Task UploadVideos(IPage page)
     foreach (var videoPath in videosPath)
     {
         await page.SetInputFilesAsync(settings.UploadButtonSelector, videoPath);
-
-
 
         await Task.Delay(2000);
     }

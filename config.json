@@ -2,10 +2,10 @@
   "headless": false,
 
   "cms_admin_user": "admin",
-  "cms_admin_password": "S2tqmLiKcJQG6fom",
+  "cms_admin_password": "lloviwnlrj",
 
-  "cms_login_url": "http://mediacms.emadhelmi.ir/accounts/login",
-  "cms_upload_url": "http://mediacms.emadhelmi.ir/upload",
+  "cms_login_url": "http://ino.rubru.me/accounts/login",
+  "cms_upload_url": "http://ino.rubru.me/upload",
 
   "login_input_username_selector": "input#id_login",
   "login_input_password_selector": "input#id_password",
