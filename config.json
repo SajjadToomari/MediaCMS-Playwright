@@ -2,10 +2,10 @@
   "headless": false,
 
   "cms_admin_user": "admin",
-  "cms_admin_password": "lloviwnlrj",
+  "cms_admin_password": "slekv934qg",
 
-  "cms_login_url": "http://ino.rubru.me/accounts/login",
-  "cms_upload_url": "http://ino.rubru.me/upload",
+  "cms_login_url": "https://demo.ino.rubru.me/accounts/login",
+  "cms_upload_url": "https://demo.ino.rubru.me/upload",
 
   "login_input_username_selector": "input#id_login",
   "login_input_password_selector": "input#id_password",
@@ -13,5 +13,5 @@
 
   "upload_button_selector": "input[type='file']",
 
-  "upload_videos_directory": "C:\\ffmpeg-master-latest-win64-gpl\\bin"
+  "upload_videos_directory": "D:\\فیلم\\Week 09"
 }

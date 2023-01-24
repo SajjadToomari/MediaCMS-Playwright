@@ -1,6 +1,7 @@
 ﻿using Microsoft.Playwright;
 using PlaywrightDemo;
 using Serilog;
+using System.Diagnostics;
 using System.Text.Json;
 
 //Initilize console logger
@@ -10,21 +11,22 @@ Log.Logger = new LoggerConfiguration()
 
 //Read config from json
 var configPath = Path.Combine(Path.GetDirectoryName(AppContext.BaseDirectory), "config.json");
-StreamReader streamReader = new (configPath);
+StreamReader streamReader = new(configPath);
 var settings = await JsonSerializer.DeserializeAsync<Settings>(streamReader.BaseStream);
 
 //Playwright initializer
 using var playwright = await Playwright.CreateAsync();
 
-Log.Information("Playwright initilized");
+Console.WriteLine("Playwright initilized");
 
 //Launch chromium browser and save user data (cookies, etc)
 await using var browser = await playwright.Chromium.LaunchPersistentContextAsync("data1", new BrowserTypeLaunchPersistentContextOptions
 {
     Headless = settings.Headless,
+    IgnoreHTTPSErrors = true
 });
 
-Log.Information("Chromium launched");
+Console.WriteLine("Chromium launched");
 
 var page = await browser.NewPageAsync();
 
@@ -52,11 +54,11 @@ async Task Login(IPage page)
         //Click login button
         await page.Locator(settings.LoginButtonSelector).ClickAsync();
 
-        Log.Information("Logged in");
+        Console.WriteLine("Logged in");
     }
     else
     {
-        Log.Information("No need to login in");
+        Console.WriteLine("No need to login in");
     }
 }
 
@@ -68,21 +70,59 @@ async Task GoToUploadPage(IPage page)
     //Wait one second
     await Task.Delay(1000);
 
-    Log.Information("Opened upload page");
+    Console.WriteLine("Opened upload page");
 }
 
 async Task UploadVideos(IPage page)
 {
     //Get videos path
     var videosPath = Directory.GetFiles(settings.UploadVideosDirectory, "*.mp4", SearchOption.TopDirectoryOnly);
+    foreach (var item in videosPath)
+    {
+        Console.WriteLine(item);
+    }
+
+    Console.WriteLine("Videos Count: " + videosPath.Length);
+
+    int i = 0;
 
     foreach (var videoPath in videosPath)
     {
-        await page.SetInputFilesAsync(settings.UploadButtonSelector, videoPath);
+        i++;
 
-        await Task.Delay(2000);
+        Console.WriteLine("Uploading video : " + i);
+        if (!File.Exists(videoPath + ".done"))
+        {
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+
+            await page.SetInputFilesAsync(settings.UploadButtonSelector, videoPath);
+
+            while (true)
+            {
+                if (stopWatch.ElapsedMilliseconds / 1000 > 360)
+                {
+                    Console.WriteLine("video skipped : " + i);
+                    await page.ReloadAsync();
+                    break;
+                }
+
+                await Task.Delay(2000);
+
+                var isUploadSuccess = (await page.Locator("li.qq-file-id-0.qq-upload-success").CountAsync()) > 0;
+
+                if (isUploadSuccess)
+                {
+                    Console.WriteLine("video completed : " + i);
+                    File.WriteAllText(videoPath + ".done", "done");
+                    await page.ReloadAsync();
+                    break;
+                }
+            }
+        }
     }
-
 }
+
+Console.WriteLine("End");
 
 await Task.Delay(int.MaxValue);
